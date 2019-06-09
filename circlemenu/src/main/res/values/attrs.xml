@@ -24,6 +24,8 @@
             <enum name="West" value="180" />
             <enum name="North" value="270" />
         </attr>
+        <attr name="minAngle" format="integer" />
+        <attr name="maxAngle" format="integer" />
     </declare-styleable>
 
     <declare-styleable name="CircleImageView">

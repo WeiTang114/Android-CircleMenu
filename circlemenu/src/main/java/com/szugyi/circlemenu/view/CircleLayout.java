@@ -20,7 +20,11 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
@@ -77,6 +81,8 @@ public class CircleLayout extends ViewGroup {
     private float angle = 90;
     private FirstChildPosition firstChildPosition = FirstChildPosition.SOUTH;
     private boolean isRotating = true;
+    private int minAngle = -361;
+    private int maxAngle = 361;
 
     // Touch helpers
     private double touchStartAngle;
@@ -118,6 +124,8 @@ public class CircleLayout extends ViewGroup {
             speed = a.getInt(R.styleable.CircleLayout_speed, speed);
             radius = a.getDimension(R.styleable.CircleLayout_radius, radius);
             isRotating = a.getBoolean(R.styleable.CircleLayout_isRotating, isRotating);
+            setMinAngle(a.getInt(R.styleable.CircleLayout_minAngle, minAngle));
+            maxAngle = a.getInt(R.styleable.CircleLayout_maxAngle, maxAngle);
 
             // The angle where the first menu item will be drawn
             angle = a.getInt(R.styleable.CircleLayout_firstChildPosition, (int) angle);
@@ -174,6 +182,23 @@ public class CircleLayout extends ViewGroup {
     public void setRotating(boolean isRotating) {
         this.isRotating = isRotating;
     }
+
+    public int getMinAngle() {
+        return minAngle;
+    }
+
+    public void setMinAngle(int minAngle) {
+//        if (minAngle < 0) minAngle += 360;
+        this.minAngle = minAngle;
+    }
+    public int getMaxAngle() {
+        return maxAngle;
+    }
+
+    public void setMaxAngle(int maxAngle) {
+        this.maxAngle = maxAngle;
+    }
+
 
     public FirstChildPosition getFirstChildPosition() {
         return firstChildPosition;
@@ -332,7 +357,63 @@ public class CircleLayout extends ViewGroup {
     }
 
     private void rotateButtons(float degrees) {
-        angle += degrees;
+
+        // critical part
+        if (300 < degrees && degrees <400) {
+            degrees -= 360;
+        } else if (-400 < degrees && degrees < -300) {
+            degrees += 360;
+        }
+
+        float newAngle = angle + degrees;
+        Log.i("YY", "rotateButtons " + angle + "," + newAngle);
+        Log.i("YY", "m" + minAngle + ", " + maxAngle);
+
+
+        /*
+
+        >min -> <min
+        >min -> min+350< x <min+360
+        x-360>min -> x-360<min
+
+        <max -> > max
+        <max -> max-350> x >max-360
+         */
+
+//        if (angle >= minAngle && (newAngle < minAngle || (minAngle + 350 < newAngle && newAngle < minAngle + 360))) {
+//            Log.i("yy", "aa");
+//            newAngle = minAngle;
+//        } else if (angle - 360 >= minAngle && newAngle - 360 < minAngle) {
+//            newAngle = minAngle;
+//        } else if (angle <= maxAngle && (newAngle > maxAngle || (maxAngle - 350 > newAngle && newAngle > maxAngle - 360))) {
+//            newAngle = maxAngle;
+//        }
+
+        angle = newAngle;
+        /*
+
+        if (angle >= minAngle) {
+            if (newAngle)
+        }
+*/
+//
+//
+//        if (newAngle > 360) {
+//            newAngle -= 360;
+//        }
+//        if (newAngle < 0) {
+//            newAngle += 360;
+//        }
+//
+        if (newAngle >= minAngle  && newAngle <= maxAngle) {
+            angle = newAngle;
+        } else if (newAngle < minAngle) {
+            angle = minAngle;
+        } else if (newAngle > maxAngle) {
+            angle = maxAngle;
+        }
+
+//        angle += degrees;
         setChildAngles();
     }
 
