@@ -84,6 +84,9 @@ public class CircleLayout extends ViewGroup {
     private int minAngle = -361;
     private int maxAngle = 361;
 
+
+    private boolean fling = true;
+
     // Touch helpers
     private double touchStartAngle;
     private boolean didMove = false;
@@ -126,6 +129,7 @@ public class CircleLayout extends ViewGroup {
             isRotating = a.getBoolean(R.styleable.CircleLayout_isRotating, isRotating);
             setMinAngle(a.getInt(R.styleable.CircleLayout_minAngle, minAngle));
             maxAngle = a.getInt(R.styleable.CircleLayout_maxAngle, maxAngle);
+            fling = a.getBoolean(R.styleable.CircleLayout_fling, fling);
 
             // The angle where the first menu item will be drawn
             angle = a.getInt(R.styleable.CircleLayout_firstChildPosition, (int) angle);
@@ -199,6 +203,13 @@ public class CircleLayout extends ViewGroup {
         this.maxAngle = maxAngle;
     }
 
+    public boolean isFling() {
+        return fling;
+    }
+
+    public void setFling(boolean fling) {
+        this.fling = fling;
+    }
 
     public FirstChildPosition getFirstChildPosition() {
         return firstChildPosition;
@@ -548,6 +559,9 @@ public class CircleLayout extends ViewGroup {
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             if (!isRotating) {
+                return false;
+            }
+            if (!fling) {
                 return false;
             }
             // get the quadrant of the start and the end of the fling
