@@ -357,7 +357,6 @@ public class CircleLayout extends ViewGroup {
     }
 
     private void rotateButtons(float degrees) {
-
         // critical part
         if (300 < degrees && degrees <400) {
             degrees -= 360;
@@ -366,45 +365,9 @@ public class CircleLayout extends ViewGroup {
         }
 
         float newAngle = angle + degrees;
-        Log.i("YY", "rotateButtons " + angle + "," + newAngle);
-        Log.i("YY", "m" + minAngle + ", " + maxAngle);
-
-
-        /*
-
-        >min -> <min
-        >min -> min+350< x <min+360
-        x-360>min -> x-360<min
-
-        <max -> > max
-        <max -> max-350> x >max-360
-         */
-
-//        if (angle >= minAngle && (newAngle < minAngle || (minAngle + 350 < newAngle && newAngle < minAngle + 360))) {
-//            Log.i("yy", "aa");
-//            newAngle = minAngle;
-//        } else if (angle - 360 >= minAngle && newAngle - 360 < minAngle) {
-//            newAngle = minAngle;
-//        } else if (angle <= maxAngle && (newAngle > maxAngle || (maxAngle - 350 > newAngle && newAngle > maxAngle - 360))) {
-//            newAngle = maxAngle;
-//        }
 
         angle = newAngle;
-        /*
 
-        if (angle >= minAngle) {
-            if (newAngle)
-        }
-*/
-//
-//
-//        if (newAngle > 360) {
-//            newAngle -= 360;
-//        }
-//        if (newAngle < 0) {
-//            newAngle += 360;
-//        }
-//
         if (newAngle >= minAngle  && newAngle <= maxAngle) {
             angle = newAngle;
         } else if (newAngle < minAngle) {
@@ -413,7 +376,6 @@ public class CircleLayout extends ViewGroup {
             angle = maxAngle;
         }
 
-//        angle += degrees;
         setChildAngles();
     }
 
